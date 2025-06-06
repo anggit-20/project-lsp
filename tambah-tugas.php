@@ -29,7 +29,7 @@ if(isset($_POST['simpan_tugas'])) {
     $stmt->bindParam(':status', $status);
     $stmt->execute();
 
-    header("Location: index-mapel.php?");
+    header("Location: index-mapel.php?id=$id_mapel");
     exit;
 } 
 

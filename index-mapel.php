@@ -8,6 +8,12 @@
     $mapel = $stmt->fetch(PDO::FETCH_ASSOC);
   
   }
+
+  //ambil data tugas untuk tabel
+  $stmt2 = $conn->prepare("SELECT * FROM tugas WHERE id_mapel = ?");
+  $stmt2->execute([$id]);
+  $data_tugas = $stmt2->fetchAll(PDO::FETCH_ASSOC);  
+
 ?>
 
 
@@ -16,7 +22,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>ScholarNotes | Dashboard Mapel</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -63,8 +69,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <span class="brand-text font-weight-light">ScholarNotes</span>
     </a>
 
     <!-- Sidebar -->
@@ -72,16 +77,16 @@
 
       <!-- SidebarSearch Form -->
       <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="theme/dist/img/apps.png" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="index.php" class="d-block">Dashboard</a>
         </div>
       </div>
-      <!-- untuk mapel yang sudah diinputkan -->
+      </div>
+      
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -134,15 +139,16 @@
                   </tr>
                   </thead>
                   <tbody>
+                  <?php foreach ($data_tugas as $tugas):?>
                   <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
+                    <td><?php echo $tugas['tanggal_dibuat']; ?></td>
+                    <td><?php echo $tugas['judul_tugas']; ?></td>
+                    <td><?php echo $tugas['tenggat_tugas']; ?></td>
+                    <td><?php echo $tugas['catatan']; ?></td>
+                    <td><?php echo $tugas['status']; ?></td>
+                    <td><a href="./hapus-film.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-danger">Hapus</a></th>
                   </tr>
+                  <?php endforeach; ?>
                   </tbody>
                   <tfoot>
                   <tr>
@@ -161,6 +167,13 @@
             <!-- /.card -->
           </div>
         <!-- end tabel -->
+        <!-- jumlah tugas -->
+        <div class="small-box col-2" style="background-color: #99090c;">
+              <div class="inner">
+                  <p style="color: white;"><strong>Jumlah</strong></p>
+              </div>
+        </div>
+        <!-- end jumlah tugas -->
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
