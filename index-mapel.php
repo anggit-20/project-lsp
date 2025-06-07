@@ -1,3 +1,4 @@
+
 <?php
   include 'koneksi.php';
 
@@ -14,6 +15,14 @@
   $stmt2->execute([$id]);
   $data_tugas = $stmt2->fetchAll(PDO::FETCH_ASSOC);  
 
+  //menghitung jumlah tugas
+  $stmt_selesai = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'sudah' ");
+  $stmt_selesai->execute([$id]);
+  $jumlah_selesai = $stmt_selesai->fetchColumn();
+
+  $stmt_belum = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'belum' ");
+  $stmt_belum->execute([$id]);
+  $jumlah_belum = $stmt_belum->fetchColumn();
 ?>
 
 
@@ -127,7 +136,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example2" class="table table-bordered table-hover">
+                <table id="tabelTugas" class="table table-bordered table-hover">
                   <thead>
                   <tr>
                     <th>Tanggal</th>
@@ -139,6 +148,7 @@
                   </tr>
                   </thead>
                   <tbody>
+                  
                   <?php foreach ($data_tugas as $tugas):?>
                   <tr>
                     <td><?php echo $tugas['tanggal_dibuat']; ?></td>
@@ -146,9 +156,12 @@
                     <td><?php echo $tugas['tenggat_tugas']; ?></td>
                     <td><?php echo $tugas['catatan']; ?></td>
                     <td><?php echo $tugas['status']; ?></td>
-                    <td><a href="./hapus-film.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-danger">Hapus</a></th>
+                    <td><a href="./hapus-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-danger">Hapus</a>
+                        <a href="./hapus-film.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-warning">Edit</a>
+                    </td>
                   </tr>
                   <?php endforeach; ?>
+                 
                   </tbody>
                   <tfoot>
                   <tr>
@@ -168,10 +181,19 @@
           </div>
         <!-- end tabel -->
         <!-- jumlah tugas -->
-        <div class="small-box col-2" style="background-color: #99090c;">
-              <div class="inner">
-                  <p style="color: white;"><strong>Jumlah</strong></p>
+        <div class="row">
+        <div class="box col-2 mr-3 text-center" style="background-color: #99090c; height: 50px; border-radius: 5px;">
+              <div class="inner"> 
+                  <h5 class="m-0" style="color: white;"><strong><?php echo $jumlah_selesai; ?></strong></h5>
+                  <p style="color: white;">Sudah Selesai</p>
               </div>
+        </div>
+        <div class="box col-2 text-center" style="background-color: #99090c; height: 50px; border-radius: 5px;">
+              <div class="inner"> 
+                  <h5 class="m-0" style="color: white;"><strong><?php echo $jumlah_belum; ?></strong></h5>
+                  <p style="color: white;">Belum Selesai</p>
+              </div>
+        </div>
         </div>
         <!-- end jumlah tugas -->
       </div><!-- /.container-fluid -->
@@ -179,13 +201,7 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
-    </div>
-  </footer>
+  
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
@@ -229,5 +245,19 @@
 <script src="theme/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="theme/dist/js/pages/dashboard.js"></script>
+<script>
+  $(function () {
+    $("#tabelTugas").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "searching": true,
+      "ordering": true,
+      "paging": true,
+      "info": true,
+      
+    }).buttons().container().appendTo('#tabelTugas_wrapper .col-md-6:eq(0)');
+  });
+</script>
 </body>
 </html>
