@@ -3,6 +3,18 @@
 
   $stmt = $conn->query("SELECT * FROM mapel");
   $daftar_mapel = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $stmt = $conn->prepare("SELECT * FROM mapel WHERE id_mapel = ?");
+    $stmt->execute([$id]);
+    $mapel = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+  }
+
+  // $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? ");
+  // $stmt_jumlah->execute([$id_mapel]);
+  // $jumlah = $stmt_jumlah->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -107,11 +119,17 @@
         <!-- button tampil mapel -->
         <div class="row">
         <?php foreach($daftar_mapel as $mapel): ?>
+          <?php
+    // Ambil jumlah tugas untuk mapel ini
+    $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ?");
+    $stmt_jumlah->execute([$mapel['id_mapel']]);
+    $jumlah = $stmt_jumlah->fetchColumn();
+  ?>
         
           <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
               <div class="inner">
-                    <h3 class="m-0">150</h3>
+                    <h3 class="m-0"><?php echo $jumlah; ?></h3>
                     <p><?php echo $mapel['nama_mapel']; ?></p>
               </div>
               <a href="index-mapel.php?id=<?= $mapel['id_mapel'] ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>

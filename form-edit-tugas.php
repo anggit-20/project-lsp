@@ -1,41 +1,21 @@
-
 <?php
-  include 'koneksi.php';
+include 'koneksi.php';
 
-  if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $stmt = $conn->prepare("SELECT * FROM mapel WHERE id_mapel = ?");
-    $stmt->execute([$id]);
-    $mapel = $stmt->fetch(PDO::FETCH_ASSOC);
-  
-  }
-
-  //ambil data tugas untuk tabel
-  $stmt2 = $conn->prepare("SELECT * FROM tugas WHERE id_mapel = ?");
-  $stmt2->execute([$id]);
-  $data_tugas = $stmt2->fetchAll(PDO::FETCH_ASSOC);  
-
-  //menghitung jumlah tugas
-  $stmt_selesai = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'sudah' ");
-  $stmt_selesai->execute([$id]);
-  $jumlah_selesai = $stmt_selesai->fetchColumn();
-
-  $stmt_belum = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'belum' ");
-  $stmt_belum->execute([$id]);
-  $jumlah_belum = $stmt_belum->fetchColumn();
-
-  $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? ");
-  $stmt_jumlah->execute([$id]);
-  $jumlah = $stmt_jumlah->fetchColumn();
+if (isset($_GET['id_tugas'])) {
+    $id_tugas = $_GET['id_tugas'];
+    $stmt = $conn->prepare("SELECT * FROM tugas WHERE id_tugas = ?");
+    $stmt->execute([$id_tugas]);
+    $tugas = $stmt->fetch(PDO::FETCH_ASSOC);
+}
 ?>
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScholarNotes | Dashboard Mapel</title>
+  <title>Edit Tugas</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -84,7 +64,6 @@
     <a href="index3.html" class="brand-link">
       <span class="brand-text font-weight-light">ScholarNotes</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
 
@@ -99,7 +78,7 @@
         </div>
       </div>
       </div>
-      
+      <!-- untuk mapel yang sudah diinputkan -->
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -113,100 +92,50 @@
         <h2>
           Buat catatan tugasmu disini!
         </h2>
-        <!-- button tampil mapel -->
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3 class="m-0"><?php echo $jumlah; ?></h3>
-                <p><?php echo $mapel['nama_mapel']?></p>
-              </div>
+        <!-- form input mapel -->
+        <div class="card mt-3">
+            <div class="card-header">
+                Tambahkan Tugas Baru
+            </div>
+            <div class="card-body">
+                <form method="POST" action="update-tugas.php">
+                <input type="hidden" name="id_mapel" value="<?= $tugas['id_mapel'] ?>">
+                <input type="hidden" name="id_tugas" value="<?= $id_tugas ?>">
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="date" name="tanggal_dibuat" class="form-control" value="<?= $tugas['tanggal_dibuat'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Judul Tugas</label>
+                        <input type="text" name="judul_tugas" class="form-control" value="<?= $tugas['judul_tugas'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Tenggat Tugas</label>
+                        <input type="date" name="tenggat" class="form-control" value="<?= $tugas['tenggat_tugas'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan</label>
+                        <input type="text" name="catatan" class="form-control" value="<?= $tugas['catatan'] ?>">
+                    </div>
+                    <div class="form-group">
+                    <label>Status</label>
+                    <select name="status" class="form-control">
+                        <option value="belum" <?php if($tugas['status'] == 'belum') echo 'selected'; ?>>Belum</option>
+                        <option value="sudah" <?php if($tugas['status'] == 'sudah') echo 'selected'; ?>>Sudah</option>
+                    </select>
+                    </div>
+                    <button type="submit" name="simpan_edit" class="btn btn-success">Simpan</button>
+                </form>
             </div>
         </div>
-        <!-- end button mapel -->
-        <div class="row">
-            <!-- search tugas -->
-
-            <!-- end search tugas -->
-            <!-- button tambah tugas -->
-            <a href="form-tambah-tugas.php?id=<?php echo $mapel['id_mapel']; ?>" class="btn btn-primary">Tambahkan Tugas</a>
-            <!-- end button tambah -->
-        </div> <!-- /row -->
-
-        <!-- tabel data tugas -->
-          <div class="col-12">
-            <div class="card mt-4">
-              <div class="card-header">
-                <h3 class="card-title">Daftar Tugas</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="tabelTugas" class="table table-bordered table-hover">
-                  <thead>
-                  <tr>
-                    <th>Tanggal</th>
-                    <th>Judul Tugas</th>
-                    <th>Tenggat Tugas</th>
-                    <th>catatan</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  
-                  <?php foreach ($data_tugas as $tugas):?>
-                  <tr>
-                    <td><?php echo $tugas['tanggal_dibuat']; ?></td>
-                    <td><?php echo $tugas['judul_tugas']; ?></td>
-                    <td><?php echo $tugas['tenggat_tugas']; ?></td>
-                    <td><?php echo $tugas['catatan']; ?></td>
-                    <td><?php echo $tugas['status']; ?></td>
-                    <td><a href="./hapus-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-danger">Hapus</a>
-                        <a href="./form-edit-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-warning">Edit</a>
-                    </td>
-                  </tr>
-                  <?php endforeach; ?>
-                 
-                  </tbody>
-                  <tfoot>
-                  <tr>
-                  <th>Tanggal</th>
-                    <th>Judul Tugas</th>
-                    <th>Tenggat Tugas</th>
-                    <th>catatan</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        <!-- end tabel -->
-        <!-- jumlah tugas -->
-        <div class="row">
-        <div class="box col-2 mr-3 text-center" style="background-color: #99090c; height: 50px; border-radius: 5px;">
-              <div class="inner"> 
-                  <h5 class="m-0" style="color: white;"><strong><?php echo $jumlah_selesai; ?></strong></h5>
-                  <p style="color: white;">Sudah Selesai</p>
-              </div>
-        </div>
-        <div class="box col-2 text-center" style="background-color: #99090c; height: 50px; border-radius: 5px;">
-              <div class="inner"> 
-                  <h5 class="m-0" style="color: white;"><strong><?php echo $jumlah_belum; ?></strong></h5>
-                  <p style="color: white;">Belum Selesai</p>
-              </div>
-        </div>
-        </div>
-        <!-- end jumlah tugas -->
+        <!-- end form input mapel -->
+        
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
   
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -249,19 +178,5 @@
 <script src="theme/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="theme/dist/js/pages/dashboard.js"></script>
-<script>
-  $(function () {
-    $("#tabelTugas").DataTable({
-      "responsive": true,
-      "lengthChange": false,
-      "autoWidth": false,
-      "searching": true,
-      "ordering": true,
-      "paging": true,
-      "info": true,
-      
-    }).buttons().container().appendTo('#tabelTugas_wrapper .col-md-6:eq(0)');
-  });
-</script>
 </body>
 </html>
