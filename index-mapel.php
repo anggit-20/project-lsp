@@ -57,6 +57,10 @@
   <link rel="stylesheet" href="theme/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="theme/plugins/summernote/summernote-bs4.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -123,15 +127,11 @@
             </div>
         </div>
         <!-- end button mapel -->
-        <div class="row">
-            <!-- search tugas -->
-
-            <!-- end search tugas -->
             <!-- button tambah tugas -->
+            <div class="text-right">
             <a href="form-tambah-tugas.php?id=<?php echo $mapel['id_mapel']; ?>" class="btn btn-primary">Tambahkan Tugas</a>
+            </div>
             <!-- end button tambah -->
-        </div> <!-- /row -->
-
         <!-- tabel data tugas -->
           <div class="col-12">
             <div class="card mt-4">
@@ -249,6 +249,10 @@
 <script src="theme/dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="theme/dist/js/pages/dashboard.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
 <script>
   $(function () {
     $("#tabelTugas").DataTable({
@@ -257,10 +261,10 @@
       "autoWidth": false,
       "searching": true,
       "ordering": true,
-      "paging": true,
+      "paging": false,
       "info": true,
       
-    }).buttons().container().appendTo('#tabelTugas_wrapper .col-md-6:eq(0)');
+    }).container().appendTo('#tabelTugas_wrapper .col-md-6:eq(0)');
   });
 </script>
 </body>
