@@ -90,7 +90,7 @@ if (isset($_GET['id_tugas'])) {
     <section class="content">
       <div class="container-fluid">
         <h2>
-          Edit catatan tugasmu disini!
+          Edit catatan tugas disini!
         </h2>
         <!-- form input mapel -->
         <div class="card mt-3">

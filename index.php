@@ -98,7 +98,7 @@
                 <form method="POST" action="tambah-mapel.php">
                     <div class="form-group">
                     <label>Nama Mata Pelajaran</label>
-                    <input type="text" name="nama_mapel" class="form-control">
+                    <input type="text" name="nama_mapel" class="form-control" required>
                     </div>
                     <button type="submit" name="simpan_mapel" class="btn btn-success">Simpan</button>
                 </form>
@@ -121,7 +121,7 @@
                     <h3 class="m-0"><?php echo $jumlah; ?></h3>
                     <p><?php echo $mapel['nama_mapel']; ?></p>
               </div>
-              <a href="index-mapel.php?id=<?= $mapel['id_mapel'] ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="index-mapel.php?id=<?= $mapel['id_mapel'] ?>" class="small-box-footer">Buka <i class="fas fa-arrow-circle-right"></i></a>
             </div>
             <a href="./hapus-mapel.php?id_mapel=<?php echo $mapel['id_mapel'] ?>" class="btn btn-danger rounded-pill">Hapus</a>
           </div>

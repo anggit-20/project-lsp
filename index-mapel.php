@@ -117,7 +117,6 @@
         <h2>
           Buat catatan tugasmu disini!
         </h2>
-        <!-- button tampil mapel -->
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
               <div class="inner">
@@ -129,7 +128,7 @@
         <!-- end button mapel -->
             <!-- button tambah tugas -->
             <div class="text-right">
-            <a href="form-tambah-tugas.php?id=<?php echo $mapel['id_mapel']; ?>" class="btn btn-primary">Tambahkan Tugas</a>
+            <a href="form-tambah-tugas.php?id=<?php echo $mapel['id_mapel']; ?>" class="btn btn-primary">Tambah Tugas</a>
             </div>
             <!-- end button tambah -->
         <!-- tabel data tugas -->
