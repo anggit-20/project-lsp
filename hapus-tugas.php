@@ -1,33 +1,17 @@
 <?php
 include 'koneksi.php';
 
-if (isset($_GET['id_tugas'])) {
+// Cek apakah parameter id_tugas dikirim melalui URL
+if (isset($_GET['id_tugas']) && isset($_GET['id_mapel'])) {
+    // Ambil nilai id_tugas dari parameter URL
     $id_tugas = $_GET['id_tugas'];
+    $id_mapel = $_GET['id_mapel'];
 
-    // Ambil id_mapel dari tugas yang akan dihapus
-    $stmt = $conn->prepare("SELECT id_mapel FROM tugas WHERE id_tugas = :id_tugas");
-    $stmt->bindParam(':id_tugas', $id_tugas);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($result) {
-        $id_mapel = $result['id_mapel'];
-
-        // Hapus tugas
-        $sql = "DELETE FROM tugas WHERE id_tugas = :id_tugas";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id_tugas', $id_tugas);
-
-        if ($stmt->execute()) {
-            // Redirect ke halaman daftar mapel dengan id_mapel
-            header("Location: index-mapel.php?id=$id_mapel");
-            exit();
-        } else {
-            echo "Gagal menghapus data.";
-        }
+    $stmt = $conn->prepare("DELETE FROM tugas WHERE id_tugas = ?");
+    if ($stmt->execute([$id_tugas])) {
+        header("Location: index-mapel.php?id=$id_mapel");
+        exit();
     } else {
-        echo "Data tugas tidak ditemukan.";
+        echo "Gagal menghapus data.";
     }
-} else {
-    echo "ID tugas tidak ditemukan.";
-}
+} 

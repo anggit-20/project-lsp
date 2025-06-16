@@ -4,26 +4,29 @@
 
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
+    // ambil data mapel berdasarkan ID
     $stmt = $conn->prepare("SELECT * FROM mapel WHERE id_mapel = ?");
     $stmt->execute([$id]);
     $mapel = $stmt->fetch(PDO::FETCH_ASSOC);
   
   }
 
-  //ambil data tugas untuk tabel
+  // ambil semua data tugas yang berkaitan dengan mapel tertentu
   $stmt2 = $conn->prepare("SELECT * FROM tugas WHERE id_mapel = ?");
   $stmt2->execute([$id]);
   $data_tugas = $stmt2->fetchAll(PDO::FETCH_ASSOC);  
 
-  //menghitung jumlah tugas
+   // menghitung jumlah tugas dengan status "sudah"
   $stmt_selesai = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'sudah' ");
   $stmt_selesai->execute([$id]);
   $jumlah_selesai = $stmt_selesai->fetchColumn();
 
+  // menghitung jumlah tugas dengan status "belum"
   $stmt_belum = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? AND status = 'belum' ");
   $stmt_belum->execute([$id]);
   $jumlah_belum = $stmt_belum->fetchColumn();
 
+  // menghitung total jumlah tugas untuk mapel ini
   $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ? ");
   $stmt_jumlah->execute([$id]);
   $jumlah = $stmt_jumlah->fetchColumn();
@@ -159,8 +162,9 @@
                     <td><?php echo $tugas['tenggat_tugas']; ?></td>
                     <td><?php echo $tugas['catatan']; ?></td>
                     <td><?php echo $tugas['status']; ?></td>
-                    <td><a href="./hapus-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-danger">Hapus</a>
-                        <a href="./form-edit-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-warning">Edit</a>
+                    <td>
+                      <a href="./hapus-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>&id_mapel=<?php echo $tugas['id_mapel'] ?>" class="btn btn-danger">Hapus</a>
+                      <a href="./form-edit-tugas.php?id_tugas=<?php echo $tugas['id_tugas'] ?>" class="btn btn-warning">Edit</a>
                     </td>
                   </tr>
                   <?php endforeach; ?>

@@ -1,11 +1,14 @@
 <?php
   include 'koneksi.php';
 
+  //mengambil data dari tabel mapel untuk ditampilkan
   $stmt = $conn->query("SELECT * FROM mapel");
   $daftar_mapel = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+  // Mengecek apakah ada parameter 'id'
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
+     // Ambil data mapel berdasarkan id_mapel
     $stmt = $conn->prepare("SELECT * FROM mapel WHERE id_mapel = ?");
     $stmt->execute([$id]);
     $mapel = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -108,21 +111,24 @@
         <!-- button tampil mapel -->
         <div class="row">
         <?php foreach($daftar_mapel as $mapel): ?>
-          <?php
-    // Ambil jumlah tugas untuk mapel ini
-    $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ?");
-    $stmt_jumlah->execute([$mapel['id_mapel']]);
-    $jumlah = $stmt_jumlah->fetchColumn();
-  ?>
+        <?php
+        // Ambil jumlah tugas untuk mapel ini
+        $stmt_jumlah = $conn->prepare("SELECT COUNT(*) FROM tugas WHERE id_mapel = ?");
+        $stmt_jumlah->execute([$mapel['id_mapel']]);
+        $jumlah = $stmt_jumlah->fetchColumn();
+        ?>
         
           <div class="col-lg-3 col-6">
+             <!-- Kotak untuk menampilkan jumlah tugas -->
             <div class="small-box bg-info">
               <div class="inner">
                     <h3 class="m-0"><?php echo $jumlah; ?></h3>
                     <p><?php echo $mapel['nama_mapel']; ?></p>
               </div>
+              <!-- Tombol menuju detail tugas dari mapel ini -->
               <a href="index-mapel.php?id=<?= $mapel['id_mapel'] ?>" class="small-box-footer">Buka <i class="fas fa-arrow-circle-right"></i></a>
             </div>
+            <!-- Tombol hapus mapel -->
             <a href="./hapus-mapel.php?id_mapel=<?php echo $mapel['id_mapel'] ?>" class="btn btn-danger rounded-pill">Hapus</a>
           </div>
         

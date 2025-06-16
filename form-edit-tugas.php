@@ -1,13 +1,14 @@
 <?php
 include 'koneksi.php';
 
+// Mengecek apakah parameter id_tugas ada di URL
 if (isset($_GET['id_tugas'])) {
     $id_tugas = $_GET['id_tugas'];
+    //mengambil data tugas berdasarkan id_tugas
     $stmt = $conn->prepare("SELECT * FROM tugas WHERE id_tugas = ?");
     $stmt->execute([$id_tugas]);
     $tugas = $stmt->fetch(PDO::FETCH_ASSOC);
 }
-?>
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +100,9 @@ if (isset($_GET['id_tugas'])) {
             </div>
             <div class="card-body">
                 <form method="POST" action="update-tugas.php">
+                <!-- mengembalikan user ke halaman dashboard mapel -->
                 <input type="hidden" name="id_mapel" value="<?= $tugas['id_mapel'] ?>">
+                <!-- memberitahu update-tugas.php tugas mana yang sedang diedit -->
                 <input type="hidden" name="id_tugas" value="<?= $id_tugas ?>">
                     <div class="form-group">
                         <label>Tanggal</label>

@@ -1,9 +1,12 @@
 <?php
+// Mengecek apakah parameter 'id' tersedia di URL
 if (!isset($_GET['id'])) {
     // Jika tidak ada id di URL, redirect ke index-mapel.php
     header('Location: index-mapel.php');
     exit;
 }
+
+// Menyimpan nilai id dari URL ke dalam variabel
 $id_mapel = $_GET['id'];
 ?>
 
