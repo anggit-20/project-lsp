@@ -74,11 +74,6 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        
-      </div>
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -89,7 +84,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <h2>
+        <h2 class="text-center">
           Buat catatan tugasmu disini!
         </h2>
         <!-- form input mapel -->
